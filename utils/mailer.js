@@ -1,22 +1,26 @@
 const nodemailer = require('nodemailer');
 
+// Use port 587 with STARTTLS - works on Render free tier
 const transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
-  port: 465,
-  secure: true,
+  port: 587,
+  secure: false,
   auth: {
     user: process.env.GMAIL_USER,
     pass: process.env.GMAIL_PASS,
   },
   tls: {
-    rejectUnauthorized: false
-  }
+    rejectUnauthorized: false,
+    ciphers: 'SSLv3'
+  },
+  connectionTimeout: 10000,
+  greetingTimeout: 10000,
+  socketTimeout: 10000,
 });
 
-// Verify connection on startup
-transporter.verify((error, success) => {
+transporter.verify((error) => {
   if (error) {
-    console.error('Email transporter error:', error.message);
+    console.error('Email error:', error.message);
   } else {
     console.log('Email server ready');
   }
@@ -29,7 +33,7 @@ function fmt(n) {
 function orderRows(order) {
   return (order.items || []).map(i =>
     `<tr>
-      <td style="padding:8px 0;border-bottom:1px solid #ede3d0;color:#3d2f1f;font-size:13px">${i.name}${i.size ? ' — ' + i.size : ''}${i.stone ? ' (' + i.stone + ')' : ''}</td>
+      <td style="padding:8px 0;border-bottom:1px solid #ede3d0;color:#3d2f1f;font-size:13px">${i.name}${i.size ? ' — ' + i.size : ''}</td>
       <td style="padding:8px 0;border-bottom:1px solid #ede3d0;color:#3d2f1f;font-size:13px;text-align:right">x${i.qty} &nbsp; ${fmt(i.price * i.qty)}</td>
     </tr>`
   ).join('');
@@ -45,9 +49,7 @@ function baseTemplate(content) {
       </div>
       <div style="padding:36px 40px">${content}</div>
       <div style="background:#062318;padding:16px 40px;text-align:center">
-        <p style="font-size:10px;color:rgba(245,239,227,0.3);margin:0;letter-spacing:0.08em">
-          dorrastonejewelry@gmail.com &nbsp;|&nbsp; @dorrastones
-        </p>
+        <p style="font-size:10px;color:rgba(245,239,227,0.3);margin:0">dorrastonejewelry@gmail.com &nbsp;|&nbsp; @dorrastones</p>
       </div>
     </div>
   </body></html>`;
@@ -59,7 +61,7 @@ async function sendOrderConfirmation(order) {
       Thank you, ${(order.customer.name || '').split(' ')[0]}.
     </p>
     <p style="font-size:13px;color:#7a6040;line-height:1.8;margin-bottom:20px">
-      Your order <strong style="color:#062318">${order.ref}</strong> has been received. 
+      Your order <strong style="color:#062318">${order.ref}</strong> has been received.
       We will begin preparing your piece by hand in Egypt and confirm within 24 hours.
     </p>
     <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:20px">
@@ -120,37 +122,23 @@ async function sendStatusUpdate(order) {
   const msg = messages[order.status];
   if (!msg) return;
 
-  const html = baseTemplate(`
-    <p style="font-family:Georgia,serif;font-size:20px;font-weight:300;color:#062318;margin:0 0 10px">
-      Order Update — ${order.ref}
-    </p>
-    <p style="font-size:13px;color:#7a6040;line-height:1.8">${msg}</p>
-    <p style="font-size:12px;color:#7a6040;margin-top:16px">Questions? Reply here or DM <strong>@dorrastones</strong>.</p>
-  `);
-
   return transporter.sendMail({
     from: `"Dorra Jewelry" <${process.env.GMAIL_USER}>`,
     to: order.customer.email,
     subject: `Your Dorra order ${order.ref} — ${order.status}`,
-    html,
+    html: baseTemplate(`<p style="font-size:13px;color:#7a6040;line-height:1.8">${msg}</p>`),
   });
 }
 
 async function sendReviewNotification(review) {
-  const html = baseTemplate(`
-    <p style="font-family:Georgia,serif;font-size:20px;font-weight:300;color:#062318;margin:0 0 12px">
-      New Review Pending Approval
-    </p>
-    <p style="font-size:13px;color:#3d2f1f;line-height:1.8"><strong>${review.name}</strong>${review.piece ? ' — ' + review.piece : ''}</p>
-    <p style="font-size:13px;color:#7a6040;line-height:1.8;font-style:italic">"${review.text}"</p>
-    <p style="font-size:11px;color:#7a6040;margin-top:16px">Log in to your admin panel to approve or reject this review.</p>
-  `);
-
   return transporter.sendMail({
     from: `"Dorra Reviews" <${process.env.GMAIL_USER}>`,
     to: process.env.GMAIL_USER,
     subject: `[NEW REVIEW] ${review.name} — pending approval`,
-    html,
+    html: baseTemplate(`
+      <p style="font-size:13px;color:#3d2f1f"><strong>${review.name}</strong>${review.piece ? ' — ' + review.piece : ''}</p>
+      <p style="font-size:13px;color:#7a6040;font-style:italic">"${review.text}"</p>
+    `),
   });
 }
 
