@@ -63,7 +63,7 @@ async function sendOrderConfirmation(order) {
   // Send to customer
   try {
     await transporter.sendMail({
-      from: 'Dorra Jewelry <onboarding@resend.dev>',
+      from: 'Dorra Jewelry <orders@dorrastone.shop>',
       to: order.customer.email,
       subject: `Your Dorra order ${order.ref} is confirmed`,
       html: base(`
@@ -81,7 +81,7 @@ async function sendOrderConfirmation(order) {
 async function sendAdminNotification(order) {
   try {
     await transporter.sendMail({
-      from: 'Dorra Orders <onboarding@resend.dev>',
+      from: 'Dorra Orders <orders@dorrastone.shop>',
       to: ADMIN,
       subject: `[NEW ORDER] ${order.ref} — ${fmt(order.total)} — ${order.customer.name}`,
       html: base(`
@@ -106,7 +106,7 @@ async function sendStatusUpdate(order) {
   if(!msg) return;
   try {
     await transporter.sendMail({
-      from: 'Dorra Jewelry <onboarding@resend.dev>',
+      from: 'Dorra Jewelry <orders@dorrastone.shop>',
       to: order.customer.email,
       subject: `Your Dorra order ${order.ref} — ${order.status}`,
       html: base(`<p style="font-size:13px;color:#7a6040;line-height:1.8">${msg}</p>`),
@@ -117,7 +117,7 @@ async function sendStatusUpdate(order) {
 async function sendReviewNotification(review) {
   try {
     await transporter.sendMail({
-      from: 'Dorra Reviews <onboarding@resend.dev>',
+      from: 'Dorra Reviews <orders@dorrastone.shop>',
       to: ADMIN,
       subject: `[NEW REVIEW] ${review.name} — pending approval`,
       html: base(`<p style="font-size:13px;color:#3d2f1f"><strong>${review.name}</strong>${review.piece?' — '+review.piece:''}</p><p style="font-size:13px;color:#7a6040;font-style:italic">"${review.text}"</p>`),
