@@ -60,13 +60,11 @@ function base(content, title) {
     <img src="https://dorrastone.shop/logo-email.png" alt="Dorra" width="540" style="display:block;width:100%;max-width:540px;height:auto;border:0;" />
   </div>
 
-  <!-- TITLE - seamless with header image -->
-  ${title ? `<div style="background:#062318;padding:4px 40px 22px;text-align:center;margin-top:-4px">
-    <p style="margin:0;font-size:14px;letter-spacing:0.36em;text-transform:uppercase;color:#b8913c;font-family:'Helvetica Neue',Arial,sans-serif;font-weight:500">${title}</p>
+  <!-- TITLE -->
+  ${title ? `<div style="background:#062318;padding:0 40px 26px;text-align:center">
+    <p style="margin:0;font-size:11px;letter-spacing:0.42em;text-transform:uppercase;color:rgba(184,145,60,0.85);font-family:'Helvetica Neue',Arial,sans-serif;font-weight:400">${title}</p>
   </div>` : ''}
-
-  <!-- GOLD DIVIDER -->
-  <div style="background:#b8913c;height:1px"></div>
+  <div style="height:1px;background:rgba(184,145,60,0.4)"></div>
 
   <!-- CONTENT -->
   <div style="padding:40px 44px 32px;text-align:center">${content}</div>
