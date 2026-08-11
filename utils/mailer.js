@@ -60,16 +60,16 @@ function base(content, title) {
     <img src="https://dorrastone.shop/logo-email.png" alt="Dorra" width="540" style="display:block;width:100%;max-width:540px;height:auto;border:0;" />
   </div>
 
-  <!-- TITLE -->
-  ${title ? `<div style="background:#062318;padding:0 40px 24px;text-align:center">
-    <p style="margin:0;font-size:13px;letter-spacing:0.32em;text-transform:uppercase;color:#b8913c;font-family:'Helvetica Neue',Arial,sans-serif;font-weight:400">${title}</p>
+  <!-- TITLE - seamless with header image -->
+  ${title ? `<div style="background:#062318;padding:4px 40px 22px;text-align:center;margin-top:-4px">
+    <p style="margin:0;font-size:14px;letter-spacing:0.36em;text-transform:uppercase;color:#b8913c;font-family:'Helvetica Neue',Arial,sans-serif;font-weight:500">${title}</p>
   </div>` : ''}
 
   <!-- GOLD DIVIDER -->
-  <div style="background:#b8913c;height:1px;opacity:0.6"></div>
+  <div style="background:#b8913c;height:1px"></div>
 
   <!-- CONTENT -->
-  <div style="padding:40px 44px 32px">${content}</div>
+  <div style="padding:40px 44px 32px;text-align:center">${content}</div>
 
   <!-- FOOTER -->
   <div style="background:#062318;padding:22px 44px;text-align:center">
@@ -90,9 +90,9 @@ async function sendOrderConfirmation(order) {
     to: order.customer.email,
     subject: `Your Dorra order ${order.ref} is confirmed`,
     html: base(`
-      <p style="font-family:Georgia,serif;font-size:24px;font-weight:300;color:#062318;margin:0 0 8px;letter-spacing:0.01em">Thank you, ${(order.customer.name||'').split(' ')[0]}.</p>
+      <p style="font-family:Georgia,serif;font-size:24px;font-weight:300;color:#062318;margin:0 0 8px;letter-spacing:0.01em;text-align:center">Thank you, ${(order.customer.name||'').split(' ')[0]}.</p>
       <p style="font-size:14px;color:#7a6040;line-height:1.85;margin-bottom:28px">Your order <strong style="color:#062318;letter-spacing:0.03em">${order.ref}</strong> has been received. We will begin preparing your piece by hand in Egypt and confirm within 24 hours.</p>
-      <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px">
+      <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;text-align:left">
         ${rows(order)}
         <tr>
           <td style="padding:16px 0 0;font-size:14px;color:#062318;font-weight:500;letter-spacing:0.04em">TOTAL</td>
@@ -116,7 +116,7 @@ async function sendAdminNotification(order) {
     subject: `[NEW ORDER] ${order.ref} — ${fmt(order.total)} — ${order.customer.name}`,
     html: base(`
       <p style="font-family:Georgia,serif;font-size:22px;font-weight:300;color:#062318;margin:0 0 20px">${order.ref}</p>
-      <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:20px">
+      <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:20px;text-align:left">
         <tr><td style="font-size:11px;color:#7a6040;padding:6px 0;width:110px;text-transform:uppercase;letter-spacing:0.1em">Customer</td><td style="font-size:14px;color:#3d2f1f;font-weight:500">${order.customer.name}</td></tr>
         <tr><td style="font-size:11px;color:#7a6040;padding:6px 0;text-transform:uppercase;letter-spacing:0.1em">Phone</td><td style="font-size:14px;color:#3d2f1f">${order.customer.phone}</td></tr>
         <tr><td style="font-size:11px;color:#7a6040;padding:6px 0;text-transform:uppercase;letter-spacing:0.1em">Email</td><td style="font-size:14px;color:#3d2f1f">${order.customer.email}</td></tr>
