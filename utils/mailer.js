@@ -46,10 +46,8 @@ function orderRows(order) {
 function base(content) {
   return `<!DOCTYPE html><html><body style="margin:0;padding:0;background:#f5efe3;font-family:Arial,sans-serif">
   <div style="max-width:520px;margin:0 auto">
-    <div style="background:#062318;padding:32px 40px;text-align:center">
-      <div style="font-family:Georgia,serif;font-size:36px;font-weight:300;color:#f5efe3;letter-spacing:0.06em">Dorra</div>
-      <div style="width:40px;height:1px;background:rgba(184,145,60,.5);margin:10px auto 8px;"></div>
-      <div style="font-style:italic;font-size:9px;color:rgba(184,145,60,.65);letter-spacing:0.28em;text-transform:uppercase">The Luxury of Nature</div>
+    <div style="background:#062318;padding:28px 40px;text-align:center">
+      <img src="https://dorrastone.shop/logo.png" alt="Dorra" width="200" style="display:inline-block;max-width:200px;height:auto;" />
     </div>
     <div style="padding:32px 40px;background:#f5efe3">${content}</div>
     <div style="background:#062318;padding:14px 40px;text-align:center">
