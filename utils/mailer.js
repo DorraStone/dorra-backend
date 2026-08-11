@@ -59,6 +59,7 @@ function base(content) {
 const ADMIN = 'dorrastonejewelry@gmail.com';
 
 async function sendOrderConfirmation(order) {
+  console.log("Sending confirmation to:", order.customer.email);
   // Send to customer
   try {
     await transporter.sendMail({
