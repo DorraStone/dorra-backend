@@ -47,7 +47,7 @@ function base(content) {
   return `<!DOCTYPE html><html><body style="margin:0;padding:0;background:#f5efe3;font-family:Arial,sans-serif">
   <div style="max-width:520px;margin:0 auto">
     <div style="background:#062318;padding:28px 40px;text-align:center">
-      <img src="https://dorrastone.shop/logo.png" alt="Dorra" width="200" style="display:inline-block;max-width:200px;height:auto;" />
+      <img src="https://dorrastone.shop/logo-email.png" alt="Dorra" width="240" style="display:inline-block;max-width:240px;height:auto;" />
     </div>
     <div style="padding:32px 40px;background:#f5efe3">${content}</div>
     <div style="background:#062318;padding:14px 40px;text-align:center">
