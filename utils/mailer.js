@@ -159,5 +159,24 @@ async function sendReviewNotification(review) {
   });
 }
 
+
+async function sendRequestNotification(type, data) {
+  console.log(`Sending ${type} request notification for:`, data.ref);
+  return sendEmail({
+    from: 'Dorra Orders <orders@dorrastone.shop>',
+    to: ADMIN,
+    subject: `[${type.toUpperCase()} REQUEST] ${data.ref} — ${data.name}`,
+    html: base(`
+      <p style="font-family:Georgia,serif;font-size:20px;font-weight:300;color:#062318;margin:0 0 16px">${type} Request</p>
+      <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:16px">
+        <tr><td style="font-size:11px;color:#7a6040;padding:6px 0;width:110px;text-transform:uppercase;letter-spacing:0.1em">Order Ref</td><td style="font-size:14px;color:#3d2f1f;font-weight:500">${data.ref}</td></tr>
+        <tr><td style="font-size:11px;color:#7a6040;padding:6px 0;text-transform:uppercase;letter-spacing:0.1em">Name</td><td style="font-size:14px;color:#3d2f1f">${data.name}</td></tr>
+        <tr><td style="font-size:11px;color:#7a6040;padding:6px 0;text-transform:uppercase;letter-spacing:0.1em">Address</td><td style="font-size:14px;color:#3d2f1f">${data.address||'—'}</td></tr>
+        <tr><td style="font-size:11px;color:#7a6040;padding:6px 0;text-transform:uppercase;letter-spacing:0.1em">Reason</td><td style="font-size:14px;color:#3d2f1f">${data.reason||'—'}</td></tr>
+      </table>
+    `, `New ${type} Request`),
+  });
+}
+
 console.log('Resend email ready — orders@dorrastone.shop');
-module.exports = { sendOrderConfirmation, sendAdminNotification, sendStatusUpdate, sendReviewNotification };
+module.exports = { sendOrderConfirmation, sendAdminNotification, sendStatusUpdate, sendReviewNotification, sendRequestNotification };

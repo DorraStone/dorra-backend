@@ -70,3 +70,27 @@ router.patch('/:ref/status', async (req, res) => {
 });
 
 module.exports = router;
+
+// POST /api/returns — submit a return request
+router.post('/returns', async (req, res) => {
+  try {
+    const { ref, name, address, reason } = req.body;
+    const mailer = require('../utils/mailer');
+    await mailer.sendRequestNotification('Return', { ref, name, address, reason });
+    res.status(201).json({ success: true });
+  } catch(err) {
+    res.status(500).json({ error: 'Failed to submit return' });
+  }
+});
+
+// POST /api/exchanges — submit an exchange request
+router.post('/exchanges', async (req, res) => {
+  try {
+    const { ref, name, address, reason } = req.body;
+    const mailer = require('../utils/mailer');
+    await mailer.sendRequestNotification('Exchange', { ref, name, address, reason });
+    res.status(201).json({ success: true });
+  } catch(err) {
+    res.status(500).json({ error: 'Failed to submit exchange' });
+  }
+});
