@@ -5,7 +5,17 @@ const ADMIN = 'dorrastonejewelry@gmail.com';
 
 function sendEmail({ from, to, subject, html }) {
   return new Promise((resolve, reject) => {
-    const body = JSON.stringify({ from, to: [to], subject, html });
+    const body = JSON.stringify({ 
+      from, 
+      to: [to], 
+      subject, 
+      html,
+      headers: {
+        'X-Entity-Ref-ID': Date.now().toString(),
+        'List-Unsubscribe': '<mailto:dorrastonejewelry@gmail.com?subject=unsubscribe>'
+      },
+      tags: [{ name: 'category', value: 'transactional' }]
+    });
     const buf = Buffer.from(body, 'utf8');
     const req = https.request({
       hostname: 'api.resend.com',
