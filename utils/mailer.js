@@ -5,17 +5,8 @@ const ADMIN = 'dorrastonejewelry@gmail.com';
 
 function sendEmail({ from, to, subject, html }) {
   return new Promise((resolve, reject) => {
-    const body = JSON.stringify({ 
-      from, 
-      to: [to], 
-      subject, 
-      html,
-      headers: {
-        'X-Entity-Ref-ID': Date.now().toString(),
-        'List-Unsubscribe': '<mailto:dorrastonejewelry@gmail.com?subject=unsubscribe>'
-      },
-      tags: [{ name: 'category', value: 'transactional' }]
-    });
+    const text = html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+    const body = JSON.stringify({ from, reply_to: 'dorrastonejewelry@gmail.com', to: [to], subject, html, text, headers: { 'X-Entity-Ref-ID': Date.now().toString() } });
     const buf = Buffer.from(body, 'utf8');
     const req = https.request({
       hostname: 'api.resend.com',
@@ -96,7 +87,7 @@ function base(content, title) {
 async function sendOrderConfirmation(order) {
   console.log('Sending confirmation to:', order.customer.email);
   return sendEmail({
-    from: 'Dorra Jewelry <orders@dorrastone.shop>',
+    from: 'Dorra <orders@dorrastone.shop>',
     to: order.customer.email,
     subject: `Your Dorra order ${order.ref} is confirmed`,
     html: base(`
@@ -150,7 +141,7 @@ async function sendStatusUpdate(order) {
   const msg = messages[order.status];
   if (!msg) return;
   return sendEmail({
-    from: 'Dorra Jewelry <orders@dorrastone.shop>',
+    from: 'Dorra <orders@dorrastone.shop>',
     to: order.customer.email,
     subject: `Your Dorra order ${order.ref} — ${order.status}`,
     html: base(`
