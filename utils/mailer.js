@@ -51,12 +51,15 @@ function sendEmail({ from, to, subject, html }) {
 function fmt(n) { return 'EGP ' + (n||0).toLocaleString(); }
 
 function rows(order) {
-  return (order.items||[]).map(i =>
-    `<tr>
-      <td style="padding:10px 0;border-bottom:1px solid #e8dfd0;font-size:14px;color:#3d2f1f;font-family:Georgia,serif">${i.name}${i.size?' — '+i.size:''}</td>
-      <td style="padding:10px 0;border-bottom:1px solid #e8dfd0;font-size:14px;color:#3d2f1f;text-align:right;white-space:nowrap">x${i.qty}&nbsp;&nbsp;${fmt(i.price*i.qty)}</td>
-    </tr>`
-  ).join('');
+  return (order.items||[]).map(i => {
+    const bespoke = i.isCustom ? `<div style="font-size:11px;color:#7a6040;margin-top:3px">${i.stones&&i.stones.length?'Stones: '+i.stones.join(', '):''}${i.wireColor?' • Wire: '+i.wireColor:''}</div>` : '';
+    return `<tr>
+      <td style="padding:10px 0;border-bottom:1px solid #e8dfd0;font-size:14px;color:#3d2f1f;font-family:Georgia,serif">
+        ${i.isCustom?'<span style="color:#b8913c;font-size:11px">BESPOKE</span><br/>':''}${i.name}${i.size?' — '+i.size:''}${bespoke}
+      </td>
+      <td style="padding:10px 0;border-bottom:1px solid #e8dfd0;font-size:14px;color:#3d2f1f;text-align:right;white-space:nowrap;vertical-align:top">x${i.qty}&nbsp;&nbsp;${fmt(i.price*i.qty)}</td>
+    </tr>`;
+  }).join('');
 }
 
 function base(content, title) {
