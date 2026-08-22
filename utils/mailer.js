@@ -43,10 +43,16 @@ function fmt(n) { return 'EGP ' + (n||0).toLocaleString(); }
 
 function rows(order) {
   return (order.items||[]).map(i => {
-    const bespoke = i.isCustom ? `<div style="font-size:11px;color:#7a6040;margin-top:3px">${i.stones&&i.stones.length?'Stones: '+i.stones.join(', '):''}${i.wireColor?' • Wire: '+i.wireColor:''}</div>` : '';
+    const bespoke = i.isCustom ? `
+      <div style="margin-top:6px;padding:8px;background:#faf5ec;border-left:2px solid #b8913c;">
+        ${i.stones&&i.stones.length?'<div style="font-size:12px;color:#5a3e2b;margin-bottom:3px"><b>Stones:</b> '+i.stones.join(', ')+'</div>':''}
+        ${i.wireColor?'<div style="font-size:12px;color:#5a3e2b;margin-bottom:3px"><b>Wire/Base:</b> '+i.wireColor+'</div>':''}
+        ${i.size?'<div style="font-size:12px;color:#5a3e2b;margin-bottom:3px"><b>Size:</b> '+i.size+'</div>':''}
+        ${i.customNote&&i.customNote.length>10?'<div style="font-size:12px;color:#5a3e2b;font-style:italic;margin-top:4px">Notes: '+i.customNote.substring(0,200)+'</div>':''}
+      </div>` : '';
     return `<tr>
       <td style="padding:10px 0;border-bottom:1px solid #e8dfd0;font-size:14px;color:#3d2f1f;font-family:Georgia,serif">
-        ${i.isCustom?'<span style="color:#b8913c;font-size:11px">BESPOKE</span><br/>':''}${i.name}${i.size?' — '+i.size:''}${bespoke}
+        ${i.isCustom?'<div style="color:#b8913c;font-size:11px;letter-spacing:.1em;margin-bottom:4px">✦ BESPOKE PIECE</div>':''}${i.name}${!i.isCustom&&i.size?' — '+i.size:''}${bespoke}
       </td>
       <td style="padding:10px 0;border-bottom:1px solid #e8dfd0;font-size:14px;color:#3d2f1f;text-align:right;white-space:nowrap;vertical-align:top">x${i.qty}&nbsp;&nbsp;${fmt(i.price*i.qty)}</td>
     </tr>`;
