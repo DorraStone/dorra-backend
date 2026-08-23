@@ -31,7 +31,7 @@ function orderRows(order) {
     else if (i.stone) details.push('Stone: ' + i.stone);
 
     const detailLine = details.length
-      ? `<div style="font-size:11px;color:rgba(245,239,227,0.65);margin-top:3px;line-height:1.6">${details.join(' &middot; ')}</div>`
+      ? `<div style="font-size:11px;color:rgba(245,239,227,0.8);margin-top:3px;line-height:1.6">${details.join(' &middot; ')}</div>`
       : '';
 
     const bespokeLine = i.isCustom
@@ -40,7 +40,7 @@ function orderRows(order) {
 
     return `<tr>
       <td style="padding:4px 0;font-size:15px;color:#e8dfc8;vertical-align:top">
-        <span style="color:rgba(245,239,227,0.65)">${i.name} x${i.qty}</span>
+        <span style="color:rgba(245,239,227,0.8)">${i.name} x${i.qty}</span>
         ${i.isCustom ? ' <span style="color:#b8913c;font-size:10px;letter-spacing:.08em;text-transform:uppercase">&middot; Bespoke</span>' : ''}
         ${detailLine}
         ${bespokeLine}
@@ -51,25 +51,34 @@ function orderRows(order) {
 }
 
 function baseTemplate(content) {
-  return `<!DOCTYPE html><html><head><meta charset="UTF-8"></head>
-  <body style="margin:0;padding:0;background:#01271a;font-family:'Helvetica Neue',Arial,sans-serif">
-    <div style="max-width:480px;margin:0 auto;background:#01271a">
+  return `<!DOCTYPE html><html><head><meta charset="UTF-8">
+  <meta name="color-scheme" content="light">
+  <meta name="supported-color-schemes" content="light">
+  <style>body,table,td{-webkit-text-size-adjust:none;} :root{color-scheme:light;supported-color-schemes:light;}</style>
+  </head>
+  <body style="margin:0;padding:0;background-color:#01271a;font-family:'Helvetica Neue',Arial,sans-serif">
+  <div style="display:none;max-height:0;overflow:hidden;">&nbsp;</div>
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#01271a" style="background-color:#01271a;">
+    <tr><td align="center">
+    <table role="presentation" width="480" cellpadding="0" cellspacing="0" bgcolor="#01271a" style="background-color:#01271a;max-width:480px;">
 
-      <div style="padding:28px 24px 8px;text-align:center">
+      <tr><td align="center" bgcolor="#01271a" style="background-color:#01271a;padding:28px 24px 8px;">
         <img src="${LOGO_URL}" alt="Dorra" width="150" style="display:block;margin:0 auto;height:auto;max-width:150px"/>
-      </div>
+      </td></tr>
 
-      <div style="padding:20px 24px 28px;text-align:center">
+      <tr><td align="center" bgcolor="#01271a" style="background-color:#01271a;padding:20px 24px 28px;">
         ${content}
-      </div>
+      </td></tr>
 
-      <div style="padding:16px 24px;text-align:center;border-top:1px solid rgba(184,145,60,0.15)">
-        <p style="font-size:10px;color:rgba(245,239,227,0.3);margin:0;letter-spacing:0.08em">
+      <tr><td align="center" bgcolor="#01271a" style="background-color:#01271a;padding:16px 24px;border-top:1px solid rgba(184,145,60,0.15);">
+        <p style="font-size:10px;color:rgba(245,239,227,0.6);margin:0;letter-spacing:0.08em">
           dorrastonejewelry@gmail.com &nbsp;|&nbsp; @dorrastones
         </p>
-      </div>
+      </td></tr>
 
-    </div>
+    </table>
+    </td></tr>
+  </table>
   </body></html>`;
 }
 
@@ -77,7 +86,7 @@ async function sendOrderConfirmation(order) {
   const html = baseTemplate(`
     <span style="font-size:13px;letter-spacing:0.4em;text-transform:uppercase;color:#b8913c;display:block;margin-bottom:12px">Order Confirmed</span>
     <h2 style="font-family:Georgia,serif;font-size:28px;font-weight:300;color:#f5efe3;margin:0 0 8px">Thank you, ${order.customer.name.split(' ')[0]}.</h2>
-    <p style="font-size:15px;color:rgba(245,239,227,0.65);line-height:1.85;margin:0 0 16px">Your order <strong style="color:#f5efe3">${order.ref}</strong> has been received. We will confirm by email within 24 hours and begin preparing your piece by hand in Egypt.</p>
+    <p style="font-size:15px;color:rgba(245,239,227,0.8);line-height:1.85;margin:0 0 16px">Your order <strong style="color:#f5efe3">${order.ref}</strong> has been received. We will confirm by email within 24 hours and begin preparing your piece by hand in Egypt.</p>
 
     <table width="100%" cellpadding="0" cellspacing="0" style="background:rgba(245,239,227,0.06);padding:12px 16px;margin-bottom:16px;text-align:left">
       ${orderRows(order)}
@@ -92,17 +101,17 @@ async function sendOrderConfirmation(order) {
     ` : ''}
 
     <div style="background:rgba(245,239,227,0.06);padding:14px 16px;margin-bottom:16px;text-align:left">
-      <p style="font-size:11px;color:rgba(245,239,227,0.65);margin:0 0 4px;letter-spacing:0.12em;text-transform:uppercase">Delivery to</p>
+      <p style="font-size:11px;color:rgba(245,239,227,0.8);margin:0 0 4px;letter-spacing:0.12em;text-transform:uppercase">Delivery to</p>
       <p style="font-size:13px;color:#e8dfc8;margin:0;line-height:1.7">${order.customer.address}, ${order.customer.city}</p>
     </div>
 
     ${order.payment === 'full_cod' ?
-      `<p style="font-size:12px;color:rgba(245,239,227,0.65);line-height:1.7">Payment method: <strong>Cash on Delivery</strong></p>` :
+      `<p style="font-size:12px;color:rgba(245,239,227,0.8);line-height:1.7">Payment method: <strong>Cash on Delivery</strong></p>` :
       order.instapayRef ?
-      `<p style="font-size:12px;color:rgba(245,239,227,0.65);line-height:1.7">Instapay reference <strong>${order.instapayRef}</strong> received. We will verify and confirm shortly.</p>` : ''
+      `<p style="font-size:12px;color:rgba(245,239,227,0.8);line-height:1.7">Instapay reference <strong>${order.instapayRef}</strong> received. We will verify and confirm shortly.</p>` : ''
     }
 
-    <p style="font-size:12px;color:rgba(245,239,227,0.65);line-height:1.8;margin-top:16px">
+    <p style="font-size:12px;color:rgba(245,239,227,0.8);line-height:1.8;margin-top:16px">
       If you have any questions, reply to this email or reach us on Instagram <strong>@dorrastones</strong>.
     </p>
   `);
@@ -122,17 +131,17 @@ async function sendAdminNotification(order) {
       New Order: ${order.ref}
     </p>
     <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:16px;text-align:left">
-      <tr><td style="font-size:12px;color:rgba(245,239,227,0.65);padding:4px 0;width:120px">Customer</td><td style="font-size:12px;color:#e8dfc8">${order.customer.name}</td></tr>
-      <tr><td style="font-size:12px;color:rgba(245,239,227,0.65);padding:4px 0">Phone</td><td style="font-size:12px;color:#e8dfc8">${order.customer.phone}</td></tr>
-      <tr><td style="font-size:12px;color:rgba(245,239,227,0.65);padding:4px 0">Email</td><td style="font-size:12px;color:#e8dfc8">${order.customer.email}</td></tr>
-      <tr><td style="font-size:12px;color:rgba(245,239,227,0.65);padding:4px 0">Address</td><td style="font-size:12px;color:#e8dfc8">${order.customer.address}, ${order.customer.city}</td></tr>
-      <tr><td style="font-size:12px;color:rgba(245,239,227,0.65);padding:4px 0">Payment</td><td style="font-size:12px;color:#e8dfc8">${order.payment}</td></tr>
-      <tr><td style="font-size:12px;color:rgba(245,239,227,0.65);padding:4px 0">Total</td><td style="font-size:13px;color:#f5efe3;font-weight:500">${fmt(order.total)}</td></tr>
+      <tr><td style="font-size:12px;color:rgba(245,239,227,0.8);padding:4px 0;width:120px">Customer</td><td style="font-size:12px;color:#e8dfc8">${order.customer.name}</td></tr>
+      <tr><td style="font-size:12px;color:rgba(245,239,227,0.8);padding:4px 0">Phone</td><td style="font-size:12px;color:#e8dfc8">${order.customer.phone}</td></tr>
+      <tr><td style="font-size:12px;color:rgba(245,239,227,0.8);padding:4px 0">Email</td><td style="font-size:12px;color:#e8dfc8">${order.customer.email}</td></tr>
+      <tr><td style="font-size:12px;color:rgba(245,239,227,0.8);padding:4px 0">Address</td><td style="font-size:12px;color:#e8dfc8">${order.customer.address}, ${order.customer.city}</td></tr>
+      <tr><td style="font-size:12px;color:rgba(245,239,227,0.8);padding:4px 0">Payment</td><td style="font-size:12px;color:#e8dfc8">${order.payment}</td></tr>
+      <tr><td style="font-size:12px;color:rgba(245,239,227,0.8);padding:4px 0">Total</td><td style="font-size:13px;color:#f5efe3;font-weight:500">${fmt(order.total)}</td></tr>
       ${order.dueNow ? `<tr><td style="font-size:12px;color:#b8913c;padding:4px 0">Due now</td><td style="font-size:12px;color:#b8913c">${fmt(order.dueNow)}</td></tr>` : ''}
-      ${order.instapayRef ? `<tr><td style="font-size:12px;color:rgba(245,239,227,0.65);padding:4px 0">Instapay ref</td><td style="font-size:12px;color:#e8dfc8">${order.instapayRef}</td></tr>` : ''}
+      ${order.instapayRef ? `<tr><td style="font-size:12px;color:rgba(245,239,227,0.8);padding:4px 0">Instapay ref</td><td style="font-size:12px;color:#e8dfc8">${order.instapayRef}</td></tr>` : ''}
     </table>
     <table width="100%" cellpadding="0" cellspacing="0" style="text-align:left">${orderRows(order)}</table>
-    ${order.customer.notes ? `<p style="font-size:12px;color:rgba(245,239,227,0.65);margin-top:12px;text-align:left">Notes: ${order.customer.notes}</p>` : ''}
+    ${order.customer.notes ? `<p style="font-size:12px;color:rgba(245,239,227,0.8);margin-top:12px;text-align:left">Notes: ${order.customer.notes}</p>` : ''}
   `);
 
   return resend.emails.send({
@@ -157,8 +166,8 @@ async function sendStatusUpdate(order) {
     <p style="font-family:Georgia,serif;font-size:20px;font-weight:300;color:#f5efe3;margin:0 0 10px">
       Order Update — ${order.ref}
     </p>
-    <p style="font-size:13px;color:rgba(245,239,227,0.65);line-height:1.8">${msg}</p>
-    <p style="font-size:12px;color:rgba(245,239,227,0.65);margin-top:16px">Questions? Reply here or DM <strong>@dorrastones</strong>.</p>
+    <p style="font-size:13px;color:rgba(245,239,227,0.8);line-height:1.8">${msg}</p>
+    <p style="font-size:12px;color:rgba(245,239,227,0.8);margin-top:16px">Questions? Reply here or DM <strong>@dorrastones</strong>.</p>
   `);
 
   return resend.emails.send({
@@ -176,8 +185,8 @@ async function sendReviewNotification(review) {
       New Review Pending Approval
     </p>
     <p style="font-size:13px;color:#e8dfc8;line-height:1.8"><strong>${review.name}</strong>${review.piece ? ' — ' + review.piece : ''}</p>
-    <p style="font-size:13px;color:rgba(245,239,227,0.65);line-height:1.8;font-style:italic">"${review.text}"</p>
-    <p style="font-size:11px;color:rgba(245,239,227,0.65);margin-top:16px">Log in to your admin panel to approve or reject this review.</p>
+    <p style="font-size:13px;color:rgba(245,239,227,0.8);line-height:1.8;font-style:italic">"${review.text}"</p>
+    <p style="font-size:11px;color:rgba(245,239,227,0.8);margin-top:16px">Log in to your admin panel to approve or reject this review.</p>
   `);
 
   return resend.emails.send({
@@ -194,10 +203,10 @@ async function sendRequestNotification(type, data) {
       New ${type} Request
     </p>
     <table width="100%" cellpadding="0" cellspacing="0" style="text-align:left">
-      <tr><td style="font-size:12px;color:rgba(245,239,227,0.65);padding:4px 0;width:110px">Order Ref</td><td style="font-size:12px;color:#e8dfc8">${data.ref || ''}</td></tr>
-      <tr><td style="font-size:12px;color:rgba(245,239,227,0.65);padding:4px 0">Name</td><td style="font-size:12px;color:#e8dfc8">${data.name || ''}</td></tr>
-      <tr><td style="font-size:12px;color:rgba(245,239,227,0.65);padding:4px 0">Address</td><td style="font-size:12px;color:#e8dfc8">${data.address || ''}</td></tr>
-      <tr><td style="font-size:12px;color:rgba(245,239,227,0.65);padding:4px 0">Reason</td><td style="font-size:12px;color:#e8dfc8">${data.reason || ''}</td></tr>
+      <tr><td style="font-size:12px;color:rgba(245,239,227,0.8);padding:4px 0;width:110px">Order Ref</td><td style="font-size:12px;color:#e8dfc8">${data.ref || ''}</td></tr>
+      <tr><td style="font-size:12px;color:rgba(245,239,227,0.8);padding:4px 0">Name</td><td style="font-size:12px;color:#e8dfc8">${data.name || ''}</td></tr>
+      <tr><td style="font-size:12px;color:rgba(245,239,227,0.8);padding:4px 0">Address</td><td style="font-size:12px;color:#e8dfc8">${data.address || ''}</td></tr>
+      <tr><td style="font-size:12px;color:rgba(245,239,227,0.8);padding:4px 0">Reason</td><td style="font-size:12px;color:#e8dfc8">${data.reason || ''}</td></tr>
     </table>
   `);
 
