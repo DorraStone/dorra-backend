@@ -57,7 +57,6 @@ function baseTemplate(content) {
 
       <div style="padding:28px 24px 8px;text-align:center">
         <img src="${LOGO_URL}" alt="Dorra" width="150" style="display:block;margin:0 auto;height:auto;max-width:150px"/>
-        <p style="font-size:13px;letter-spacing:0.38em;text-transform:uppercase;color:rgba(184,145,60,0.6);margin:10px 0 0">Order Confirmed</p>
       </div>
 
       <div style="padding:20px 24px 28px;text-align:center">
