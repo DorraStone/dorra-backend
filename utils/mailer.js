@@ -9,7 +9,7 @@ const ADMIN_EMAIL = process.env.ADMIN_EMAIL || process.env.GMAIL_USER;
 // Hosted on GitHub (raw file URL) instead of embedded base64 — most email
 // clients (Gmail included) block/strip inline base64 images, so it must be
 // a real hosted image URL to actually display.
-const LOGO_URL = process.env.LOGO_URL || 'https://raw.githubusercontent.com/DorraStone/dorra-backend/main/assets/dorra-logo-email.png';
+const LOGO_URL = process.env.LOGO_URL || 'https://raw.githubusercontent.com/DorraStone/dorra-backend/main/assets/dorra-logo-email.png?v=3';
 
 function fmt(n) {
   return 'EGP ' + (n || 0).toLocaleString();
