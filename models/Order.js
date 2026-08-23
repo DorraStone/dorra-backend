@@ -1,12 +1,16 @@
 const mongoose = require('mongoose');
 
 const itemSchema = new mongoose.Schema({
-  name:    { type: String, required: true },
-  stone:   String,
-  size:    String,
-  qty:     { type: Number, default: 1 },
-  price:   Number,
-});
+  name:       { type: String, required: true },
+  stone:      String,
+  stones:     [String],
+  size:       String,
+  wireColor:  String,
+  isCustom:   { type: Boolean, default: false },
+  customNote: String,
+  qty:        { type: Number, default: 1 },
+  price:      Number,
+}, { _id: false });
 
 const orderSchema = new mongoose.Schema({
   ref:       { type: String, required: true, unique: true },
