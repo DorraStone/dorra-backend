@@ -85,7 +85,7 @@ function baseTemplate(content) {
       </td></tr>
 
       <tr><td align="center" bgcolor="#01271a" class="dorra-bg-dark" style="background-color:#01271a;padding:16px 24px;border-top:1px solid rgba(184,145,60,0.15);">
-        <p class="dorra-text-light-muted" style="text-shadow:0 1px 2px rgba(0,0,0,.55),0 0 1px rgba(0,0,0,.4);font-size:10px;color:rgba(245,239,227,0.6);margin:0;letter-spacing:0.08em">
+        <p class="dorra-text-light-muted" style="font-size:10px;color:rgba(245,239,227,0.6);margin:0;letter-spacing:0.08em">
           dorrastonejewelry@gmail.com &nbsp;|&nbsp; @dorrastones
         </p>
       </td></tr>
@@ -98,9 +98,9 @@ function baseTemplate(content) {
 
 async function sendOrderConfirmation(order) {
   const html = baseTemplate(`
-    <span class="dorra-text-gold" style="text-shadow:0 1px 2px rgba(0,0,0,.55),0 0 1px rgba(0,0,0,.4);font-size:13px;letter-spacing:0.4em;text-transform:uppercase;color:#b8913c;display:block;margin-bottom:12px">Order Confirmed</span>
+    <span class="dorra-text-gold" style="font-size:13px;letter-spacing:0.4em;text-transform:uppercase;color:#b8913c;display:block;margin-bottom:12px">Order Confirmed</span>
     <h2 class="dorra-text-dark" style="font-family:Georgia,serif;font-size:28px;font-weight:300;color:#062318;margin:0 0 8px">Thank you, ${order.customer.name.split(' ')[0]}.</h2>
-    <p class="dorra-text-dark-muted" style="text-shadow:0 1px 1px rgba(255,255,255,.5);font-size:15px;color:#7a6040;line-height:1.85;margin:0 0 16px">Your order <strong class="dorra-text-dark" style="color:#062318">${order.ref}</strong> has been received. We will confirm by email within 24 hours and begin preparing your piece by hand in Egypt.</p>
+    <p class="dorra-text-dark-muted" style="font-size:15px;color:#7a6040;line-height:1.85;margin:0 0 16px">Your order <strong class="dorra-text-dark" style="color:#062318">${order.ref}</strong> has been received. We will confirm by email within 24 hours and begin preparing your piece by hand in Egypt.</p>
 
     <table class="dorra-panel" width="100%" cellpadding="0" cellspacing="0" style="background:#ede3d0;padding:12px 16px;margin-bottom:16px;text-align:left">
       ${orderRows(order)}
@@ -111,21 +111,21 @@ async function sendOrderConfirmation(order) {
     </table>
 
     ${order.dueNow > 0 && order.dueNow < order.total ? `
-    <p class="dorra-text-gold" style="text-shadow:0 1px 2px rgba(0,0,0,.55),0 0 1px rgba(0,0,0,.4);font-size:14px;color:#b8913c;margin-bottom:16px">Amount due now: ${fmt(order.dueNow)}  Remaining on delivery: ${fmt(order.dueOnDelivery)}</p>
+    <p class="dorra-text-gold" style="font-size:14px;color:#b8913c;margin-bottom:16px">Amount due now: ${fmt(order.dueNow)}  Remaining on delivery: ${fmt(order.dueOnDelivery)}</p>
     ` : ''}
 
     <div class="dorra-panel" style="background:#ede3d0;padding:14px 16px;margin-bottom:16px;text-align:left">
-      <p class="dorra-text-dark-muted" style="text-shadow:0 1px 1px rgba(255,255,255,.5);font-size:11px;color:#7a6040;margin:0 0 4px;letter-spacing:0.12em;text-transform:uppercase">Delivery to</p>
-      <p class="dorra-text-dark-body" style="text-shadow:0 1px 1px rgba(255,255,255,.5);font-size:13px;color:#3d2f1f;margin:0;line-height:1.7">${order.customer.address}, ${order.customer.city}</p>
+      <p class="dorra-text-dark-muted" style="font-size:11px;color:#7a6040;margin:0 0 4px;letter-spacing:0.12em;text-transform:uppercase">Delivery to</p>
+      <p class="dorra-text-dark-body" style="font-size:13px;color:#3d2f1f;margin:0;line-height:1.7">${order.customer.address}, ${order.customer.city}</p>
     </div>
 
     ${order.payment === 'full_cod' ?
-      `<p class="dorra-text-dark-muted" style="text-shadow:0 1px 1px rgba(255,255,255,.5);font-size:12px;color:#7a6040;line-height:1.7">Payment method: <strong>Cash on Delivery</strong></p>` :
+      `<p class="dorra-text-dark-muted" style="font-size:12px;color:#7a6040;line-height:1.7">Payment method: <strong>Cash on Delivery</strong></p>` :
       order.instapayRef ?
-      `<p class="dorra-text-dark-muted" style="text-shadow:0 1px 1px rgba(255,255,255,.5);font-size:12px;color:#7a6040;line-height:1.7">Instapay reference <strong>${order.instapayRef}</strong> received. We will verify and confirm shortly.</p>` : ''
+      `<p class="dorra-text-dark-muted" style="font-size:12px;color:#7a6040;line-height:1.7">Instapay reference <strong>${order.instapayRef}</strong> received. We will verify and confirm shortly.</p>` : ''
     }
 
-    <p class="dorra-text-dark-muted" style="text-shadow:0 1px 1px rgba(255,255,255,.5);font-size:12px;color:#7a6040;line-height:1.8;margin-top:16px">
+    <p class="dorra-text-dark-muted" style="font-size:12px;color:#7a6040;line-height:1.8;margin-top:16px">
       If you have any questions, reply to this email or reach us on Instagram <strong>@dorrastones</strong>.
     </p>
   `);
@@ -145,17 +145,18 @@ async function sendAdminNotification(order) {
       New Order: ${order.ref}
     </p>
     <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:16px;text-align:left">
-      <tr><td class="dorra-text-dark-muted" style="text-shadow:0 1px 1px rgba(255,255,255,.5);font-size:12px;color:#7a6040;padding:4px 0;width:120px">Customer</td><td class="dorra-text-dark-body" style="text-shadow:0 1px 1px rgba(255,255,255,.5);font-size:12px;color:#3d2f1f">${order.customer.name}</td></tr>
-      <tr><td class="dorra-text-dark-muted" style="text-shadow:0 1px 1px rgba(255,255,255,.5);font-size:12px;color:#7a6040;padding:4px 0">Phone</td><td class="dorra-text-dark-body" style="text-shadow:0 1px 1px rgba(255,255,255,.5);font-size:12px;color:#3d2f1f">${order.customer.phone}</td></tr>
-      <tr><td class="dorra-text-dark-muted" style="text-shadow:0 1px 1px rgba(255,255,255,.5);font-size:12px;color:#7a6040;padding:4px 0">Email</td><td class="dorra-text-dark-body" style="text-shadow:0 1px 1px rgba(255,255,255,.5);font-size:12px;color:#3d2f1f">${order.customer.email}</td></tr>
-      <tr><td class="dorra-text-dark-muted" style="text-shadow:0 1px 1px rgba(255,255,255,.5);font-size:12px;color:#7a6040;padding:4px 0">Address</td><td class="dorra-text-dark-body" style="text-shadow:0 1px 1px rgba(255,255,255,.5);font-size:12px;color:#3d2f1f">${order.customer.address}, ${order.customer.city}</td></tr>
-      <tr><td class="dorra-text-dark-muted" style="text-shadow:0 1px 1px rgba(255,255,255,.5);font-size:12px;color:#7a6040;padding:4px 0">Payment</td><td class="dorra-text-dark-body" style="text-shadow:0 1px 1px rgba(255,255,255,.5);font-size:12px;color:#3d2f1f">${order.payment}</td></tr>
-      <tr><td class="dorra-text-dark-muted" style="text-shadow:0 1px 1px rgba(255,255,255,.5);font-size:12px;color:#7a6040;padding:4px 0">Total</td><td class="dorra-text-dark" style="font-size:13px;color:#062318;font-weight:500">${fmt(order.total)}</td></tr>
-      ${order.dueNow ? `<tr><td class="dorra-text-gold" style="text-shadow:0 1px 2px rgba(0,0,0,.55),0 0 1px rgba(0,0,0,.4);font-size:12px;color:#b8913c;padding:4px 0">Due now</td><td class="dorra-text-gold" style="text-shadow:0 1px 2px rgba(0,0,0,.55),0 0 1px rgba(0,0,0,.4);font-size:12px;color:#b8913c">${fmt(order.dueNow)}</td></tr>` : ''}
-      ${order.instapayRef ? `<tr><td class="dorra-text-dark-muted" style="text-shadow:0 1px 1px rgba(255,255,255,.5);font-size:12px;color:#7a6040;padding:4px 0">Instapay ref</td><td class="dorra-text-dark-body" style="text-shadow:0 1px 1px rgba(255,255,255,.5);font-size:12px;color:#3d2f1f">${order.instapayRef}</td></tr>` : ''}
+      <tr><td class="dorra-text-dark-muted" style="font-size:12px;color:#7a6040;padding:4px 0;width:120px">Customer</td><td class="dorra-text-dark-body" style="font-size:12px;color:#3d2f1f">${order.customer.name}</td></tr>
+      <tr><td class="dorra-text-dark-muted" style="font-size:12px;color:#7a6040;padding:4px 0">Phone</td><td class="dorra-text-dark-body" style="font-size:12px;color:#3d2f1f">${order.customer.phone}</td></tr>
+      <tr><td class="dorra-text-dark-muted" style="font-size:12px;color:#7a6040;padding:4px 0">Email</td><td class="dorra-text-dark-body" style="font-size:12px;color:#3d2f1f">${order.customer.email}</td></tr>
+      <tr><td class="dorra-text-dark-muted" style="font-size:12px;color:#7a6040;padding:4px 0">Address</td><td class="dorra-text-dark-body" style="font-size:12px;color:#3d2f1f">${order.customer.address}, ${order.customer.city}</td></tr>
+      <tr><td class="dorra-text-dark-muted" style="font-size:12px;color:#7a6040;padding:4px 0">Payment</td><td class="dorra-text-dark-body" style="font-size:12px;color:#3d2f1f">${order.payment}</td></tr>
+      <tr><td class="dorra-text-dark-muted" style="font-size:12px;color:#7a6040;padding:4px 0">Total</td><td class="dorra-text-dark" style="font-size:13px;color:#062318;font-weight:500">${fmt(order.total)}</td></tr>
+      ${order.dueNow ? `<tr><td class="dorra-text-gold" style="font-size:12px;color:#b8913c;padding:4px 0">Due now</td><td class="dorra-text-gold" style="font-size:12px;color:#b8913c">${fmt(order.dueNow)}</td></tr>` : ''}
+      ${order.instapayRef ? `<tr><td class="dorra-text-dark-muted" style="font-size:12px;color:#7a6040;padding:4px 0">Instapay ref</td><td class="dorra-text-dark-body" style="font-size:12px;color:#3d2f1f">${order.instapayRef}</td></tr>` : ''}
     </table>
+    ${order.instapayScreenshot ? `<div style="text-align:left;margin-bottom:12px"><p class="dorra-text-dark-muted" style="font-size:11px;color:#7a6040;margin:0 0 6px">Payment proof:</p><img src="${order.instapayScreenshot}" alt="Payment proof" style="max-width:220px;display:block;border:1px solid rgba(26,18,10,.15)"/></div>` : ''}
     <table width="100%" cellpadding="0" cellspacing="0" style="text-align:left">${orderRows(order)}</table>
-    ${order.customer.notes ? `<p class="dorra-text-dark-muted" style="text-shadow:0 1px 1px rgba(255,255,255,.5);font-size:12px;color:#7a6040;margin-top:12px;text-align:left">Notes: ${order.customer.notes}</p>` : ''}
+    ${order.customer.notes ? `<p class="dorra-text-dark-muted" style="font-size:12px;color:#7a6040;margin-top:12px;text-align:left">Notes: ${order.customer.notes}</p>` : ''}
   `);
 
   return resend.emails.send({
@@ -180,8 +181,8 @@ async function sendStatusUpdate(order) {
     <p class="dorra-text-dark" style="font-family:Georgia,serif;font-size:20px;font-weight:300;color:#062318;margin:0 0 10px">
       Order Update — ${order.ref}
     </p>
-    <p class="dorra-text-dark-muted" style="text-shadow:0 1px 1px rgba(255,255,255,.5);font-size:13px;color:#7a6040;line-height:1.8">${msg}</p>
-    <p class="dorra-text-dark-muted" style="text-shadow:0 1px 1px rgba(255,255,255,.5);font-size:12px;color:#7a6040;margin-top:16px">Questions? Reply here or DM <strong>@dorrastones</strong>.</p>
+    <p class="dorra-text-dark-muted" style="font-size:13px;color:#7a6040;line-height:1.8">${msg}</p>
+    <p class="dorra-text-dark-muted" style="font-size:12px;color:#7a6040;margin-top:16px">Questions? Reply here or DM <strong>@dorrastones</strong>.</p>
   `);
 
   return resend.emails.send({
@@ -198,9 +199,9 @@ async function sendReviewNotification(review) {
     <p class="dorra-text-dark" style="font-family:Georgia,serif;font-size:20px;font-weight:300;color:#062318;margin:0 0 12px">
       New Review Pending Approval
     </p>
-    <p class="dorra-text-dark-body" style="text-shadow:0 1px 1px rgba(255,255,255,.5);font-size:13px;color:#3d2f1f;line-height:1.8"><strong>${review.name}</strong>${review.piece ? ' — ' + review.piece : ''}</p>
-    <p class="dorra-text-dark-muted" style="text-shadow:0 1px 1px rgba(255,255,255,.5);font-size:13px;color:#7a6040;line-height:1.8;font-style:italic">"${review.text}"</p>
-    <p class="dorra-text-dark-muted" style="text-shadow:0 1px 1px rgba(255,255,255,.5);font-size:11px;color:#7a6040;margin-top:16px">Log in to your admin panel to approve or reject this review.</p>
+    <p class="dorra-text-dark-body" style="font-size:13px;color:#3d2f1f;line-height:1.8"><strong>${review.name}</strong>${review.piece ? ' — ' + review.piece : ''}</p>
+    <p class="dorra-text-dark-muted" style="font-size:13px;color:#7a6040;line-height:1.8;font-style:italic">"${review.text}"</p>
+    <p class="dorra-text-dark-muted" style="font-size:11px;color:#7a6040;margin-top:16px">Log in to your admin panel to approve or reject this review.</p>
   `);
 
   return resend.emails.send({
@@ -217,10 +218,10 @@ async function sendRequestNotification(type, data) {
       New ${type} Request
     </p>
     <table width="100%" cellpadding="0" cellspacing="0" style="text-align:left">
-      <tr><td class="dorra-text-dark-muted" style="text-shadow:0 1px 1px rgba(255,255,255,.5);font-size:12px;color:#7a6040;padding:4px 0;width:110px">Order Ref</td><td class="dorra-text-dark-body" style="text-shadow:0 1px 1px rgba(255,255,255,.5);font-size:12px;color:#3d2f1f">${data.ref || ''}</td></tr>
-      <tr><td class="dorra-text-dark-muted" style="text-shadow:0 1px 1px rgba(255,255,255,.5);font-size:12px;color:#7a6040;padding:4px 0">Name</td><td class="dorra-text-dark-body" style="text-shadow:0 1px 1px rgba(255,255,255,.5);font-size:12px;color:#3d2f1f">${data.name || ''}</td></tr>
-      <tr><td class="dorra-text-dark-muted" style="text-shadow:0 1px 1px rgba(255,255,255,.5);font-size:12px;color:#7a6040;padding:4px 0">Address</td><td class="dorra-text-dark-body" style="text-shadow:0 1px 1px rgba(255,255,255,.5);font-size:12px;color:#3d2f1f">${data.address || ''}</td></tr>
-      <tr><td class="dorra-text-dark-muted" style="text-shadow:0 1px 1px rgba(255,255,255,.5);font-size:12px;color:#7a6040;padding:4px 0">Reason</td><td class="dorra-text-dark-body" style="text-shadow:0 1px 1px rgba(255,255,255,.5);font-size:12px;color:#3d2f1f">${data.reason || ''}</td></tr>
+      <tr><td class="dorra-text-dark-muted" style="font-size:12px;color:#7a6040;padding:4px 0;width:110px">Order Ref</td><td class="dorra-text-dark-body" style="font-size:12px;color:#3d2f1f">${data.ref || ''}</td></tr>
+      <tr><td class="dorra-text-dark-muted" style="font-size:12px;color:#7a6040;padding:4px 0">Name</td><td class="dorra-text-dark-body" style="font-size:12px;color:#3d2f1f">${data.name || ''}</td></tr>
+      <tr><td class="dorra-text-dark-muted" style="font-size:12px;color:#7a6040;padding:4px 0">Address</td><td class="dorra-text-dark-body" style="font-size:12px;color:#3d2f1f">${data.address || ''}</td></tr>
+      <tr><td class="dorra-text-dark-muted" style="font-size:12px;color:#7a6040;padding:4px 0">Reason</td><td class="dorra-text-dark-body" style="font-size:12px;color:#3d2f1f">${data.reason || ''}</td></tr>
     </table>
   `);
 
