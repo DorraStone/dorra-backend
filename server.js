@@ -16,6 +16,7 @@ mongoose.connect(process.env.MONGO_URI)
 app.use('/api/orders',  require('./routes/orders'));
 app.use('/api/reviews', require('./routes/reviews'));
 app.use('/api/payment', require('./routes/payment'));
+app.use('/api/customers', require('./routes/customers'));
 
 app.get('/', (req, res) => res.json({ status: 'Dorra API running', time: new Date().toISOString() }));
 
