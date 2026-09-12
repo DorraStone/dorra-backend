@@ -233,4 +233,32 @@ async function sendRequestNotification(type, data) {
   });
 }
 
-module.exports = { sendOrderConfirmation, sendAdminNotification, sendStatusUpdate, sendReviewNotification, sendRequestNotification };
+// Batch/marketing message - sent individually to each recipient in a loop by the
+// route handler (not a true bulk-send API call), reusing the same visual template
+// as every other Dorra email so it looks consistent with order confirmations.
+async function sendBatchMessage(to, name, subject, message) {
+  const firstName = (name || '').split(' ')[0];
+  const paragraphs = String(message)
+    .split(/\n{2,}/)
+    .map(p => `<p class="dorra-text-dark-body" style="font-size:15px;color:#3d2f1f;line-height:1.85;margin:0 0 14px">${p.replace(/\n/g, '<br>')}</p>`)
+    .join('');
+
+  const html = baseTemplate(`
+    <span class="dorra-text-gold" style="font-size:13px;letter-spacing:0.4em;text-transform:uppercase;color:#b8913c;display:block;margin-bottom:12px">From Dorra</span>
+    ${firstName ? `<h2 class="dorra-text-dark" style="font-family:Georgia,serif;font-size:24px;font-weight:300;color:#062318;margin:0 0 16px">Hi ${firstName},</h2>` : ''}
+    ${paragraphs}
+    <p class="dorra-text-dark-muted" style="font-size:12px;color:#7a6040;line-height:1.8;margin-top:20px">
+      Reply to this email or reach us on Instagram <strong>@dorrastones</strong> any time.
+    </p>
+  `);
+
+  return resend.emails.send({
+    from: FROM_ADMIN,
+    to,
+    reply_to: ADMIN_EMAIL,
+    subject,
+    html,
+  });
+}
+
+module.exports = { sendOrderConfirmation, sendAdminNotification, sendStatusUpdate, sendReviewNotification, sendRequestNotification, sendBatchMessage };

@@ -3,6 +3,7 @@ const bcrypt   = require('bcryptjs');
 const jwt      = require('jsonwebtoken');
 const Customer = require('../models/Customer');
 const Order    = require('../models/Order');
+const mailer   = require('../utils/mailer');
 
 const JWT_SECRET = process.env.JWT_SECRET;
 const TOKEN_EXPIRY = '180d'; // stay logged in for ~6 months
@@ -129,6 +130,48 @@ router.get('/insights', async (req, res) => {
   } catch (err) {
     console.error('Insights error:', err.message);
     res.status(500).json({ error: 'Failed to compute insights' });
+  }
+});
+
+// POST /api/customers/batch-message — admin only: send the same message to a chosen
+// list of customers, one email each (not a true bulk API call - a paced loop, to
+// stay well within Resend's rate limits). Returns a summary of sent/failed counts
+// rather than failing the whole batch if one address bounces.
+router.post('/batch-message', async (req, res) => {
+  try {
+    if (req.headers['x-admin-secret'] !== process.env.ADMIN_SECRET) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+    const { recipients, subject, message } = req.body;
+    if (!Array.isArray(recipients) || !recipients.length || !subject || !message) {
+      return res.status(400).json({ error: 'Recipients, subject and message are all required' });
+    }
+    if (recipients.length > 500) {
+      return res.status(400).json({ error: 'Too many recipients in one batch (max 500) - please split into smaller groups' });
+    }
+
+    let sent = 0;
+    let failed = 0;
+    const failedEmails = [];
+
+    for (const r of recipients) {
+      if (!r || !r.email) { failed++; continue; }
+      try {
+        await mailer.sendBatchMessage(r.email, r.name, subject, message);
+        sent++;
+      } catch (e) {
+        failed++;
+        failedEmails.push(r.email);
+        console.error('Batch message failed for', r.email, e.message);
+      }
+      // Gentle pacing between sends so we stay well under Resend's rate limits
+      await new Promise(resolve => setTimeout(resolve, 550));
+    }
+
+    res.json({ success: true, sent, failed, failedEmails });
+  } catch (err) {
+    console.error('Batch message error:', err.message);
+    res.status(500).json({ error: 'Failed to send batch message' });
   }
 });
 
