@@ -22,32 +22,39 @@ function fmtFinish(w) {
   return w;
 }
 
+function esc(v) {
+  return String(v == null ? '' : v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
 function orderRows(order) {
   return order.items.map(i => {
-    const details = [];
-    if (i.size) details.push(i.size);
-    if (i.wireColor) details.push(fmtFinish(i.wireColor));
-    if (i.stones && i.stones.length) details.push('Stones: ' + i.stones.join(', '));
-    else if (i.stone) details.push('Stone: ' + i.stone);
-
-    const detailLine = details.length
-      ? `<div style="font-size:11px;color:#7a6040;margin-top:3px;line-height:1.6">${details.join(' &middot; ')}</div>`
-      : '';
-
-    const bespokeLine = i.isCustom
-      ? `<div style="font-size:11px;color:#b8913c;margin-top:4px;font-style:italic;line-height:1.6">${i.customNote || 'Bespoke piece'}</div>`
-      : '';
+    // What the customer actually chose (includes swaps + shade, e.g. "Crystal Quartz (Light Blue)")
+    const chosen = i.stone ? String(i.stone) : (i.stones && i.stones.length ? i.stones.join(', ') : '');
+    const original = i.stones && i.stones.length ? i.stones.join(', ') : '';
+    const rowStyle = 'font-size:12px;color:#3d2f1f;line-height:1.7';
+    const lbl = t => `<span style="color:#7a6040">${t}:</span> `;
+    const lines = [];
+    if (chosen) lines.push(`<div style="${rowStyle}">${lbl('Stones chosen')}<strong>${esc(chosen)}</strong></div>`);
+    if (!i.isCustom && original && chosen && original !== chosen) lines.push(`<div style="font-size:11px;color:#9a8460;line-height:1.7">${lbl('Original design')}${esc(original)}</div>`);
+    if (i.wireColor) lines.push(`<div style="${rowStyle}">${lbl('Finish')}<strong>${esc(fmtFinish(i.wireColor))}</strong></div>`);
+    if (i.size) lines.push(`<div style="${rowStyle}">${lbl('Size')}<strong>${esc(i.size)}</strong></div>`);
+    if (i.decoWires && i.decoWires.length) lines.push(`<div style="${rowStyle}">${lbl('Decorative wire')}${esc(i.decoWires.map(w => String(w).replace('_', ' ')).join(', '))}</div>`);
+    if (i.isCustom && i.customNote) lines.push(`<div style="font-size:11px;color:#b8913c;margin-top:3px;font-style:italic;line-height:1.6">${lbl('Full bespoke spec')}${esc(i.customNote)}</div>`);
 
     return `<tr>
-      <td style="padding:4px 0;font-size:15px;color:#3d2f1f;vertical-align:top">
-        <span style="color:#7a6040">${i.name} x${i.qty}</span>
+      <td style="padding:8px 0;font-size:15px;color:#3d2f1f;vertical-align:top;border-bottom:1px solid rgba(26,18,10,.06)">
+        <span style="color:#3d2f1f;font-weight:600">${esc(i.name)} x${i.qty}</span>
         ${i.isCustom ? ' <span style="color:#b8913c;font-size:10px;letter-spacing:.08em;text-transform:uppercase">&middot; Bespoke</span>' : ''}
-        ${detailLine}
-        ${bespokeLine}
+        ${lines.join('')}
       </td>
-      <td style="padding:4px 0;font-size:15px;color:#3d2f1f;text-align:right;vertical-align:top;white-space:nowrap">${fmt(i.price * i.qty)}</td>
+      <td style="padding:8px 0;font-size:15px;color:#3d2f1f;text-align:right;vertical-align:top;white-space:nowrap;border-bottom:1px solid rgba(26,18,10,.06)">${fmt(i.price * i.qty)}</td>
     </tr>`;
   }).join('');
+}
+
+function promoRow(order) {
+  if (!order.promoCode && !order.discount) return '';
+  return `<tr><td style="padding:6px 0;font-size:13px;color:#7a6040">Promo ${esc(order.promoCode || '')}</td><td style="padding:6px 0;font-size:13px;color:#7a6040;text-align:right">-${fmt(order.discount)}</td></tr>`;
 }
 
 function baseTemplate(content) {
@@ -104,6 +111,7 @@ async function sendOrderConfirmation(order) {
 
     <table class="dorra-panel" width="100%" cellpadding="0" cellspacing="0" style="background:#ede3d0;padding:12px 16px;margin-bottom:16px;text-align:left">
       ${orderRows(order)}
+      ${promoRow(order)}
       <tr>
         <td class="dorra-text-dark" style="padding-top:8px;border-top:1px solid rgba(26,18,10,.08);font-size:15px;font-weight:500;color:#062318">Total</td>
         <td class="dorra-text-dark" style="padding-top:8px;border-top:1px solid rgba(26,18,10,.08);font-size:15px;font-weight:500;color:#062318;text-align:right">${fmt(order.total)}</td>
@@ -155,7 +163,7 @@ async function sendAdminNotification(order) {
       ${order.instapayRef ? `<tr><td class="dorra-text-dark-muted" style="font-size:12px;color:#7a6040;padding:4px 0">Instapay ref</td><td class="dorra-text-dark-body" style="font-size:12px;color:#3d2f1f">${order.instapayRef}</td></tr>` : ''}
     </table>
     ${order.instapayScreenshot ? `<div style="text-align:left;margin-bottom:12px"><p class="dorra-text-dark-muted" style="font-size:11px;color:#7a6040;margin:0 0 6px">Payment proof:</p><img src="${order.instapayScreenshot}" alt="Payment proof" style="max-width:220px;display:block;border:1px solid rgba(26,18,10,.15)"/></div>` : ''}
-    <table width="100%" cellpadding="0" cellspacing="0" style="text-align:left">${orderRows(order)}</table>
+    <p style="font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#b8913c;margin:8px 0 4px;text-align:left">Exact order</p><table width="100%" cellpadding="0" cellspacing="0" style="text-align:left">${orderRows(order)}${promoRow(order)}</table>
     ${order.customer.notes ? `<p class="dorra-text-dark-muted" style="font-size:12px;color:#7a6040;margin-top:12px;text-align:left">Notes: ${order.customer.notes}</p>` : ''}
   `);
 

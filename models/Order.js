@@ -1,50 +1,40 @@
 const mongoose = require('mongoose');
 
 const itemSchema = new mongoose.Schema({
-  name:       { type: String, required: true },
-  stone:      String,
-  stones:     [String],
+  name:       String,
+  stone:      String,          // stones the customer chose, incl. swaps + shades
+  stones:     [String],        // original design stones
   size:       String,
-  wireColor:  String,
-  isCustom:   { type: Boolean, default: false },
-  customNote: String,
-  qty:        { type: Number, default: 1 },
+  wireColor:  String,          // gold / silver finish
+  decoWires:  [String],        // bespoke decorative wires
+  isCustom:   Boolean,
+  customNote: String,          // full bespoke spec
+  qty:        Number,
   price:      Number,
 }, { _id: false });
 
 const orderSchema = new mongoose.Schema({
-  ref:       { type: String, required: true, unique: true },
-  status:    { type: String, default: 'pending', enum: ['pending','confirmed','crafting','shipped','delivered','cancelled'] },
-  adminStatus: { type: String, default: 'new' },
-
-  customer: {
-    name:    { type: String, required: true },
-    phone:   { type: String, required: true },
-    email:   { type: String, required: true },
-    address: { type: String, required: true },
-    city:    String,
-    notes:   String,
-  },
-
+  ref:      { type: String, unique: true },
+  status:   { type: String, default: 'pending' },
+  adminStatus: String,
+  customer: { name: String, phone: String, email: String, address: String, city: String, notes: String },
   items:    [itemSchema],
-  packaging: { type: String, default: 'standard' },
+  packaging: mongoose.Schema.Types.Mixed,
   shipping:  Number,
   subtotal:  Number,
-  total:     { type: Number, required: true },
-
+  total:     Number,
+  promoCode: String,
+  discount:  Number,
   payment:   String,
-  instapayRef:        String,
+  instapayRef: String,
   instapayScreenshot: String,
-  paymobTransactionId: String,
-  paymobSuccess:       { type: Boolean, default: false },
-
-  isCustom:   { type: Boolean, default: false },
-  deposit:    Number,
-  balance:    Number,
-  dueNow:     Number,
+  isCustom:  Boolean,
+  deposit:   Number,
+  balance:   Number,
+  dueNow:    Number,
   dueOnDelivery: Number,
-
-  emailSent:  { type: Boolean, default: false },
-}, { timestamps: true });
+  emailSent: { type: Boolean, default: false },
+  date:      String,
+}, { timestamps: true, strict: false });
 
 module.exports = mongoose.model('Order', orderSchema);
