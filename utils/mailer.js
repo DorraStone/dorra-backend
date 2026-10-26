@@ -53,8 +53,17 @@ function orderRows(order) {
 }
 
 function promoRow(order) {
-  if (!order.promoCode && !order.discount) return '';
-  return `<tr><td style="padding:6px 0;font-size:13px;color:#7a6040">Promo ${esc(order.promoCode || '')}</td><td style="padding:6px 0;font-size:13px;color:#7a6040;text-align:right">-${fmt(order.discount)}</td></tr>`;
+  let out = '';
+  if (order.bfDiscount > 0) {
+    out += `<tr><td style="padding:6px 0;font-size:13px;color:#b8913c">Black Friday - ${order.bfFreeCount > 1 ? order.bfFreeCount + ' pieces' : '1 piece'} on us</td><td style="padding:6px 0;font-size:13px;color:#b8913c;text-align:right">-${fmt(order.bfDiscount)}</td></tr>`;
+  }
+  if (order.promoCode || order.discount) {
+    out += `<tr><td style="padding:6px 0;font-size:13px;color:#7a6040">Promo ${esc(order.promoCode || '')}</td><td style="padding:6px 0;font-size:13px;color:#7a6040;text-align:right">-${fmt(order.discount)}</td></tr>`;
+  }
+  if (order.mysteryGifts > 0) {
+    out += `<tr><td style="padding:8px 0;font-size:14px;color:#062318;font-weight:600">&#127873; Mystery gift x${order.mysteryGifts} <span style="font-weight:400;color:#7a6040">(Black Friday - please pack ${order.mysteryGifts} gift${order.mysteryGifts > 1 ? 's' : ''})</span></td><td style="padding:8px 0;font-size:14px;color:#b8913c;text-align:right;font-weight:600">FREE</td></tr>`;
+  }
+  return out;
 }
 
 function baseTemplate(content) {
@@ -171,7 +180,7 @@ async function sendAdminNotification(order) {
     from: FROM_ADMIN,
     to: ADMIN_EMAIL,
     reply_to: order.customer.email,
-    subject: `New order ${order.ref} — ${fmt(order.total)} — ${order.customer.name}`,
+    subject: `New order ${order.ref} — ${fmt(order.total)} — ${order.customer.name}${order.mysteryGifts > 0 ? ' — PACK ' + order.mysteryGifts + ' GIFT' + (order.mysteryGifts > 1 ? 'S' : '') : ''}`,
     html,
   });
 }

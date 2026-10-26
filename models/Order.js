@@ -25,6 +25,9 @@ const orderSchema = new mongoose.Schema({
   total:     Number,
   promoCode: String,
   discount:  Number,
+  bfDiscount:   Number,   // Black Friday free-piece value
+  bfFreeCount:  Number,
+  mysteryGifts: Number,   // gifts to pack with this order
   payment:   String,
   instapayRef: String,
   instapayScreenshot: String,
